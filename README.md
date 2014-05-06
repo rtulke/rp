@@ -1,4 +1,4 @@
 rpen
 ====
 
-rpen is a text color marker based on egrep
+rpen is a color highlighter  based on egrep
