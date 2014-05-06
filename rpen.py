@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-rpen: rpen is a color highlighter  based on egrep.
+rpen: rpen is a text highlighter  based on egrep.
 
 @author: Robert Tulke, rt@debian.sh
 @copyright: GPLv2
