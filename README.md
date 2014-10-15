@@ -1,7 +1,7 @@
 rpen
 ====
 
-rpen is a text highlighter based on egrep
+rpen (Red Pencil) is a text highlighter based on egrep
 
 try:
 
