@@ -3,14 +3,18 @@ rpen
 
 rpen is a text highlighter based on egrep
 
-use: 
+try:
 
-cat /foo/bar | rpen searchstring1 searchstring2 .. 
+<syntaxhighlight lang="bash">
+$ cat /foo/bar | rpen searchstring1 searchstring2 .. 
+</syntaxhighlight>
 
 or try
-
-cat /foo/bar | rpen searchstring1 searchstring2 .. | less -R 
+<syntaxhighlight lang="bash">
+$ cat /foo/bar | rpen searchstring1 searchstring2 .. | less -R 
+</syntaxhighlight>
 
 for regex
-
-cat /foo/bar | rpen ^.*[04]
+<syntaxhighlight lang="bash">
+$ cat /foo/bar | rpen ^.*[04]
+</syntaxhighlight>
