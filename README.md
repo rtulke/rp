@@ -5,16 +5,16 @@ rpen is a text highlighter based on egrep
 
 try:
 
-<syntaxhighlight lang="bash">
+<code>
 $ cat /foo/bar | rpen searchstring1 searchstring2 .. 
-</syntaxhighlight>
+</code>>
 
 or try
-<syntaxhighlight lang="bash">
+<code>
 $ cat /foo/bar | rpen searchstring1 searchstring2 .. | less -R 
-</syntaxhighlight>
+</code>
 
 for regex
-<syntaxhighlight lang="bash">
+<code>
 $ cat /foo/bar | rpen ^.*[04]
-</syntaxhighlight>
+</code>
