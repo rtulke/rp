@@ -22,6 +22,7 @@ $ cat /foo/bar | rpen ^.*[04]
 </code>
 
 highlight whole line:
+
 <code>
 $ cat /foo/bar | rpen ^.*searchstring*.$
 </code>
