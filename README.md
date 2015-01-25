@@ -13,6 +13,7 @@ Installation:
 * chmod 777 /usr/local/bin (systemwide)
 
 Examples:
+
 <code>
 $ cat /foo/bar | rpen searchstring1 searchstring2 .. 
 </code>
