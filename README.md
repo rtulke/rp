@@ -12,8 +12,9 @@ Requirements:
 Installation:
 -------------
 * download rpen
-* copy rpen to /usr/local/bin
-* chmod 777 /usr/local/bin (systemwide)
+* mv rpen.py rpen
+* cp rpen /usr/local/bin/
+* chmod 777 /usr/local/bin/rpen (systemwide)
 
 Examples:
 ---------
