@@ -7,6 +7,8 @@ rpen: rpen is a text highlighter  based on egrep.
 @author: Robert Tulke, rt@debian.sh
 @copyright: GPLv2
 @date: 2014-05-06
+
+18aug16: alp, added: if first arg i --> case_insensitive
 """
 
 import os
@@ -16,6 +18,13 @@ from subprocess import Popen, PIPE, STDOUT
 
 parser = OptionParser()
 (options, args) = parser.parse_args()
+
+if args[0] == "i":
+    case_insensitive = True
+    args = args[1:] # shift
+else:
+    case_insensitive = False
+print case_insensitive
 
 colors = [
     ('red','01;31'),
@@ -34,7 +43,12 @@ if len(args) > 0:
         color = colors[i%len(colors)][1]
         env=os.environ.copy()
         env['GREP_COLORS'] = "mt="+color
-        p = Popen(["egrep", srch+"|", "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
+	
+	if case_insensitive:
+	    p = Popen(["egrep", srch+"|", "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
+	else:
+	    p = Popen(["egrep", srch+"|", "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
+
         op = p.communicate(input=op)[0]
     print(op)
 else:
