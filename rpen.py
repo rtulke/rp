@@ -24,7 +24,6 @@ if args[0] == "i":
     args = args[1:] # shift
 else:
     case_insensitive = False
-print case_insensitive
 
 colors = [
     ('red','01;31'),
