@@ -13,43 +13,40 @@ Installation:
 -------------
 * download rpen.py or use git:
 
-<code>
-$ git clone https://github.com/rtulke/rpen.git
-$ cp rpen/rpen.py /usr/local/bin/rpen
-$ chmod 777 /usr/local/bin/rpen (systemwide)
-</code>
+```
+git clone https://github.com/rtulke/rpen.git
+cp rpen/rpen.py /usr/local/bin/rpen
+chmod 777 /usr/local/bin/rpen (systemwide)
+```
+
 
 Examples:
 ---------
-<code>
-$ cat /foo/bar | rpen searchstring1 searchstring2 .. 
-</code>
+```
+cat /foo/bar | rpen searchstring1 searchstring2 .. 
+```
 
+or try less with RAW mode:
 
-or try less with RAW mode
-
-<code>
-$ cat /foo/bar | rpen searchstring1 searchstring2 .. | less -R 
-</code>
-
+```
+cat /foo/bar | rpen searchstring1 searchstring2 .. | less -R 
+```
 
 rpen with regex:
 
-<code>
-$ cat /foo/bar | rpen ^.*[04]
-</code>
-
+```
+cat /foo/bar | rpen ^.*[04]
+```
 
 highlight whole line:
 
-<code>
-$ cat /foo/bar | rpen ^.\*searchstring\*.$
-</code>
-
+```
+cat /foo/bar | rpen ^.\*searchstring\*.$
+```
 
 if first arg i --> case_insensitive:
 
-<code>
-$ cat /foo/bar | rpen i Searchstring1 searchString2 .. | less -R 
-</code>
+```
+cat /foo/bar | rpen i Searchstring1 searchString2 .. | less -R 
+```
 
