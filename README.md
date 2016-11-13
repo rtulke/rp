@@ -47,6 +47,6 @@ $ cat /foo/bar | rpen ^.\*searchstring\*.$
 if first arg i --> case_insensitive:
 
 <code>
-$ cat /foo/bar | rpen -i Searchstring1 searchString2 .. | less -R 
+$ cat /foo/bar | rpen i Searchstring1 searchString2 .. | less -R 
 </code>
 
