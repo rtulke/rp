@@ -17,33 +17,35 @@ from optparse import OptionParser
 from subprocess import Popen, PIPE, STDOUT
 
 parser = OptionParser()
+parser.add_option("-i", action="store_true", dest="ignore_case", default=False, help="perform a case insensitive search")
+parser.add_option("-k", action="store_true", dest="display_all", default=False, help="only highlight, do not filter")
 (options, args) = parser.parse_args()
 
-if args[0] == "i":
-    case_insensitive = True
-    args = args[1:] # shift
-else:
-    case_insensitive = False
-
 colors = [
-    ('red','01;31'),
-    ('green','01;32'),
-    ('yellow','01;33'),
-    ('blue','01;34'),
-    ('purple','0;35'),
-    ('magenta','01;35'),
-    ('cyan','01;36'),
-    ('brown','0;33'),
+    ('green','04;01;32'),
+    ('yellow','04;01;33'),
+    ('red','04;01;31'),
+    ('blue','04;01;34'),
+    ('purple','0;04;35'),
+    ('magenta','04;01;35'),
+    ('cyan','04;01;36'),
+    ('brown','0;04;33'),
     ]
 
 if len(args) > 0:
     op = sys.stdin.read()
+    if not options.display_all:
+        if options.ignore_case:
+            p = Popen(["egrep", "|".join(args), "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy())
+        else:
+            p = Popen(["egrep", "|".join(args), "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy())
+        op = p.communicate(input=op)[0]
     for i,srch in enumerate(args):
         color = colors[i%len(colors)][1]
         env=os.environ.copy()
         env['GREP_COLORS'] = "mt="+color
 	
-	if case_insensitive:
+	if options.ignore_case:
 	    p = Popen(["egrep", srch+"|", "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
 	else:
 	    p = Popen(["egrep", srch+"|", "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
