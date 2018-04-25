@@ -16,7 +16,7 @@ import sys
 from optparse import OptionParser
 from subprocess import Popen, PIPE, STDOUT
 
-parser = OptionParser()
+parser = OptionParser("usage: cat logfile | %prog [options] searchterm1 searchterm2...")
 parser.add_option("-i", action="store_true", dest="ignore_case", default=False, help="perform a case insensitive search")
 parser.add_option("-k", action="store_true", dest="display_all", default=False, help="only highlight, do not filter")
 (options, args) = parser.parse_args()
@@ -32,27 +32,26 @@ colors = [
     ('brown','0;04;33'),
     ]
 
-if len(args) > 0:
-    op = sys.stdin.read()
-    if not options.display_all:
-        if options.ignore_case:
-            p = Popen(["egrep", "|".join(args), "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy())
-        else:
-            p = Popen(["egrep", "|".join(args), "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy())
-        op = p.communicate(input=op)[0]
-    for i,srch in enumerate(args):
-        color = colors[i%len(colors)][1]
-        env=os.environ.copy()
-        env['GREP_COLORS'] = "mt="+color
+if len(args) == 0:
+    parser.print_help()
+    sys.exit()
 
-        if options.ignore_case:
-            p = Popen(["egrep", srch+"|", "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
-        else:
-            p = Popen(["egrep", srch+"|", "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
+op = sys.stdin.read()
+if not options.display_all:
+    if options.ignore_case:
+        p = Popen(["egrep", "|".join(args), "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy())
+    else:
+        p = Popen(["egrep", "|".join(args), "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy())
+    op = p.communicate(input=op)[0]
+for i,srch in enumerate(args):
+    color = colors[i%len(colors)][1]
+    env=os.environ.copy()
+    env['GREP_COLORS'] = "mt="+color
 
-        op = p.communicate(input=op)[0]
-    print(op)
-else:
-    print("sample usage of rpen:")
-    rbegin,rend = '\033[35m','\033[0m'
-    print("cat /var/log/syslog | " + rbegin + "rpen foo bar \" foobar\" " + rend + " | less -R")
+    if options.ignore_case:
+        p = Popen(["egrep", srch+"|", "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
+    else:
+        p = Popen(["egrep", srch+"|", "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
+
+    op = p.communicate(input=op)[0]
+print(op)
