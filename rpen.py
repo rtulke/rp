@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 """
@@ -44,11 +44,11 @@ if len(args) > 0:
         color = colors[i%len(colors)][1]
         env=os.environ.copy()
         env['GREP_COLORS'] = "mt="+color
-	
-	if options.ignore_case:
-	    p = Popen(["egrep", srch+"|", "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
-	else:
-	    p = Popen(["egrep", srch+"|", "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
+
+        if options.ignore_case:
+            p = Popen(["egrep", srch+"|", "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
+        else:
+            p = Popen(["egrep", srch+"|", "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
 
         op = p.communicate(input=op)[0]
     print(op)
