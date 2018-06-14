@@ -6,14 +6,14 @@ rpen (Red Pencil) is a comandline text highlighter based on egrep
 ![Example](/images/rpen1.png)
 
 
-Requirements:
--------------
+Requirements
+------------
 
 * Python 2.5 or higher
 * egrep or grep 
 
-Installation:
--------------
+Installation
+------------
 
 ```bash
 git clone https://github.com/rtulke/rpen.git
@@ -21,8 +21,8 @@ cp rpen/rpen.py /usr/local/bin/rpen
 chmod 777 /usr/local/bin/rpen (systemwide)
 ```
 
-Usage:
-------
+Usage
+-----
 
 ```
 $ rpen
@@ -34,8 +34,9 @@ Options:
   -k          only highlight, do not filter
  ````
 
-Examples:
----------
+Examples
+--------
+
 ```bash
 cat /foo/bar | rpen searchstring1 searchstring2 .. 
 ```
