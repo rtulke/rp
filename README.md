@@ -3,7 +3,7 @@ rpen
 
 rpen (Red Pencil) is a comandline text highlighter based on egrep
 
-![Example](/images/example.png)
+![Example](/images/rpen1.png)
 
 
 Requirements:
