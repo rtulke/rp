@@ -11,7 +11,6 @@ Requirements:
 
 Installation:
 -------------
-* download rpen.py or use git:
 
 ```bash
 git clone https://github.com/rtulke/rpen.git
@@ -56,8 +55,6 @@ highlight whole line:
 cat /foo/bar | rpen ^.\*searchstring\*.$
 ```
 
-if first arg i --> case_insensitive:
-
 ```bash
-cat /foo/bar | rpen i Searchstring1 searchString2 .. | less -R 
+cat /foo/bar | rpen -i Searchstring1 searchString2 .. | less -R 
 ```
