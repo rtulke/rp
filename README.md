@@ -1,7 +1,7 @@
 rpen
 ====
 
-rpen (Red Pencil) is a comandline text highlighter based on egrep
+rpen (Red Pencil) is a simple comandline text high lighter based on egrep or grep.
 
 ![Example](/images/rpen1.png)
 
