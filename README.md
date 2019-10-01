@@ -1,7 +1,7 @@
 rpen
 ====
 
-rpen (Red Pencil) is a simple multicolor comandline text high lighter based on egrep or grep.
+rpen (Red Pencil) is a simple multicolor comandline text high lighter.
 
 ![Example](/images/rpen1.png)
 
