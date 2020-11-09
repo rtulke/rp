@@ -18,7 +18,7 @@ Installation
 ```bash
 git clone https://github.com/rtulke/rpen.git
 cp rpen/rpen.py /usr/local/bin/rpen
-chmod 777 /usr/local/bin/rpen (systemwide)
+chmod 777 /usr/local/bin/rpen
 ```
 
 Usage
