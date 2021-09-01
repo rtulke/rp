@@ -1,7 +1,7 @@
 rpen
 ====
 
-rpen - red pencil, is a simple multicolor comandline text high lighter.
+rpen - red pencil, is a simple multicolor comandline text highlighter.
 
 ![Example](/images/rpen1.png)
 
