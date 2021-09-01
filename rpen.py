@@ -5,10 +5,6 @@ import sys
 from optparse import OptionParser
 from subprocess import Popen, PIPE, STDOUT
 
-#if sys.version_info < (3, ):
-#    print('Please upgrade your Python version to 3.7.0 or higher')
-#    sys.exit()
-
 parser = OptionParser("usage: cat logfile | %prog [options] searchterm1 searchterm2...")
 parser.add_option("-i", action="store_true", dest="ignore_case", default=False, help="perform a case insensitive search")
 parser.add_option("-k", action="store_true", dest="display_all", default=False, help="only highlight, do not filter")
