@@ -9,24 +9,15 @@ rpen - red pencil, is a simple multicolor comandline text highlighter.
 Requirements
 ------------
 
-* Python 2.5 and Python 3.x
-* egrep or grep 
+* Python 2.5 or Python 3.x
+* commandline tool: egrep or grep 
 
-Installation Python 2 (old)
----------------------------
+Setup
+-----
 
 ```bash
 git clone https://github.com/rtulke/rpen.git
 cp rpen/rpen.py /usr/local/bin/rpen
-chmod 777 /usr/local/bin/rpen
-```
-
-Installation Python 3 (new)
----------------------------
-
-```bash
-git clone https://github.com/rtulke/rpen.git
-cp rpen/rpen3.py /usr/local/bin/rpen
 chmod 777 /usr/local/bin/rpen
 ```
 
