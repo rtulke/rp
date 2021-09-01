@@ -1,25 +1,14 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-"""
-rpen: rpen is a text highlighter  based on egrep.
-
-@author: Robert Tulke, rt@debian.sh
-@copyright: GPLv2
-@date: 2014-05-06
-
-18aug16: alp, added: if first arg i --> case_insensitive
-"""
-
 import os
 import sys
 from optparse import OptionParser
 from subprocess import Popen, PIPE, STDOUT
 
-if sys.version_info > (3,):
-    print('Works only with Python 2')
-    sys.exit()
-    
+#if sys.version_info < (3, ):
+#    print('Please upgrade your Python version to 3.7.0 or higher')
+#    sys.exit()
+
 parser = OptionParser("usage: cat logfile | %prog [options] searchterm1 searchterm2...")
 parser.add_option("-i", action="store_true", dest="ignore_case", default=False, help="perform a case insensitive search")
 parser.add_option("-k", action="store_true", dest="display_all", default=False, help="only highlight, do not filter")
@@ -43,9 +32,16 @@ if len(args) == 0:
 op = sys.stdin.read()
 if not options.display_all:
     if options.ignore_case:
-        p = Popen(["egrep", "|".join(args), "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy())
+        if sys.version_info > (3, ):
+            p = Popen(["egrep", "|".join(args), "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy(),encoding="utf-8")
+        else:
+            p = Popen(["egrep", "|".join(args), "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy())
+
     else:
-        p = Popen(["egrep", "|".join(args), "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy())
+        if sys.version_info > (3, ):
+            p = Popen(["egrep", "|".join(args), "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy(),encoding="utf-8")
+        else:
+            p = Popen(["egrep", "|".join(args), "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy())
     op = p.communicate(input=op)[0]
 for i,srch in enumerate(args):
     color = colors[i%len(colors)][1]
@@ -53,9 +49,16 @@ for i,srch in enumerate(args):
     env['GREP_COLORS'] = "mt="+color
 
     if options.ignore_case:
-        p = Popen(["egrep", srch+"|", "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
+        if sys.version_info > (3, ):
+            p = Popen(["egrep", srch+"|", "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env,encoding="utf-8")
+        else:
+            p = Popen(["egrep", srch+"|", "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
+
     else:
-        p = Popen(["egrep", srch+"|", "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
+        if sys.version_info > (3, ):
+            p = Popen(["egrep", srch+"|", "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env,encoding="utf-8")
+        else:
+            p = Popen(["egrep", srch+"|", "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
 
     op = p.communicate(input=op)[0]
 print(op)
