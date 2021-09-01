@@ -9,7 +9,7 @@ rpen - red pencil, is a simple multicolor comandline text high lighter.
 Requirements
 ------------
 
-* Python 2.5 or higher
+* Python 2.5 and Python 3.x
 * egrep or grep 
 
 Installation
