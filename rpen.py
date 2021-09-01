@@ -28,33 +28,40 @@ if len(args) == 0:
 op = sys.stdin.read()
 if not options.display_all:
     if options.ignore_case:
+  
         if sys.version_info > (3, ):
             p = Popen(["egrep", "|".join(args), "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy(),encoding="utf-8")
         else:
             p = Popen(["egrep", "|".join(args), "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy())
 
     else:
+        
         if sys.version_info > (3, ):
             p = Popen(["egrep", "|".join(args), "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy(),encoding="utf-8")
         else:
             p = Popen(["egrep", "|".join(args), "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy())
+
     op = p.communicate(input=op)[0]
+
 for i,srch in enumerate(args):
     color = colors[i%len(colors)][1]
     env=os.environ.copy()
     env['GREP_COLORS'] = "mt="+color
 
     if options.ignore_case:
+
         if sys.version_info > (3, ):
             p = Popen(["egrep", srch+"|", "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env,encoding="utf-8")
         else:
             p = Popen(["egrep", srch+"|", "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
 
     else:
+        
         if sys.version_info > (3, ):
             p = Popen(["egrep", srch+"|", "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env,encoding="utf-8")
         else:
             p = Popen(["egrep", srch+"|", "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
 
     op = p.communicate(input=op)[0]
+
 print(op)
