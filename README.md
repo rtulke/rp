@@ -12,10 +12,10 @@ Requirements
 ------------
 
 * Python 2.5x, 2.7x or Python 3.x
-* commandline tool: egrep or grep 
+* commandline tool: egrep or grep, grep should be GNU Version 3.x
 
-Setup
------
+Setup Linux & Mac OS X
+----------------------
 
 ```bash
 git clone https://github.com/rtulke/rpen.git
