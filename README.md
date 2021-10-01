@@ -14,14 +14,21 @@ Requirements
 * Python 2.5x, 2.7x or Python 3.x
 * commandline tool: egrep or grep, grep should be GNU Version 3.x
 
-Setup Linux & Mac OS X
-----------------------
+Setup Linux
+-----------
 
 ```bash
 git clone https://github.com/rtulke/rpen.git
 cp rpen/rpen.py /usr/local/bin/rpen
 chmod 777 /usr/local/bin/rpen
 ```
+
+Setup MacOS X
+-------------
+
+Mac OS X uses the BSD grep or egrep which is not 100% compatible with Linux grep/egrep. Therefore it requires an additional -e "OK" which must be used directly in the code.
+
+Otherwise you will get this error message: "egrep: empty (sub)expression"
 
 
 Usage
