@@ -3,8 +3,7 @@ rpen
 
 rpen - red pencil, is a simple multicolor comandline text highlighter.
 
-I always had problems with filtering out large continuous text, i.e. text that you want to filter out of log files with cat or something like that. So I needed a tool with which I can easily recognize what I'm actually looking for. 
-
+I always had problems with filtering out large continuous text, i.e. text that you want to filter out of log files with cat or something similar. So I needed a tool that makes it easy to see what I'm actually looking for.
 
 ![Example](/images/rpen1.png)
 
