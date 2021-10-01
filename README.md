@@ -12,7 +12,7 @@ I always had problems with filtering out large continuous text, i.e. text that y
 Requirements
 ------------
 
-* Python 2.5 or Python 3.x
+* Python 2.5x, 2.7x or Python 3.x
 * commandline tool: egrep or grep 
 
 Setup
