@@ -12,7 +12,7 @@ Requirements
 ------------
 
 * Python 2.5x, 2.7x or Python 3.x
-* commandline tool: egrep or grep, grep should be GNU Version 3.x
+* egrep or grep, grep should be GNU Version 3.x
 
 Setup Linux
 -----------
