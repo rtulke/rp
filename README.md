@@ -5,7 +5,7 @@ rp - red pencil, is a simple multicolor command-line tool to filter and highligh
 
 I always had problems with filtering out large continuous text, i.e. text that you want to filter out of log files with cat or something similar. So I needed a tool that makes it easy to see what I'm actually looking for.
 
-![Example](/images/rp1.png)
+![Example](/images/rpen1.png)
 
 
 Requirements
