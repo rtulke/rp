@@ -1,11 +1,11 @@
-rpen
-====
+rp
+==
 
-rpen - red pencil, is a simple multicolor command-line tool to filter and highlight the output text. 
+rp - red pencil, is a simple multicolor command-line tool to filter and highlight the output text. 
 
 I always had problems with filtering out large continuous text, i.e. text that you want to filter out of log files with cat or something similar. So I needed a tool that makes it easy to see what I'm actually looking for.
 
-![Example](/images/rpen1.png)
+![Example](/images/rp1.png)
 
 
 Requirements
@@ -18,9 +18,9 @@ Setup Linux
 -----------
 
 ```bash
-git clone https://github.com/rtulke/rpen.git
-cp rpen/rpen.py /usr/local/bin/rpen
-chmod 777 /usr/local/bin/rpen
+git clone https://github.com/rtulke/rp.git
+cp rp/rp.py /usr/local/bin/rp
+chmod 777 /usr/local/bin/rp
 ```
 
 Setup MacOS X
@@ -35,8 +35,8 @@ Usage
 -----
 
 ```
-$ rpen
-Usage: cat logfile | rpen [options] searchterm1 searchterm2...
+$ rp
+Usage: cat logfile | rp [options] searchterm1 searchterm2...
 
 Options:
   -h, --help  show this help message and exit
@@ -48,27 +48,27 @@ Examples
 --------
 
 ```bash
-cat /foo/bar | rpen searchstring1 searchstring2 .. 
+cat /foo/bar | rp searchstring1 searchstring2 .. 
 ```
 
 or try less with RAW mode:
 
 ```bash
-cat /foo/bar | rpen searchstring1 searchstring2 .. | less -R 
+cat /foo/bar | rp searchstring1 searchstring2 .. | less -R 
 ```
 
-rpen with regex:
+rp with regex:
 
 ```bash
-cat /foo/bar | rpen ^.*[04]
+cat /foo/bar | rp ^.*[04]
 ```
 
 highlight whole line:
 
 ```bash
-cat /foo/bar | rpen ^.\*searchstring\*.$
+cat /foo/bar | rp ^.\*searchstring\*.$
 ```
 
 ```bash
-cat /foo/bar | rpen -i Searchstring1 searchString2 .. | less -R 
+cat /foo/bar | rp -i Searchstring1 searchString2 .. | less -R 
 ```
