@@ -1,7 +1,7 @@
 rp
 ==
 
-rp - red pencil, is a simple multicolor command-line tool to filter and highlight the output text. 
+rp - red pencil is a simple multicolor command-line tool to highlight the filtered output text. 
 
 I always had problems with filtering out large continuous text, i.e. text that you want to filter out of log files with cat or something similar. So I needed a tool that makes it easy to see what I'm actually looking for.
 
