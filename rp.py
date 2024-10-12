@@ -1,67 +1,62 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import os
 import sys
-from optparse import OptionParser
+import argparse
 from subprocess import Popen, PIPE, STDOUT
 
-parser = OptionParser("usage: cat logfile | %prog [options] searchterm1 searchterm2...")
-parser.add_option("-i", action="store_true", dest="ignore_case", default=False, help="perform a case insensitive search")
-parser.add_option("-k", action="store_true", dest="display_all", default=False, help="only highlight, do not filter")
-(options, args) = parser.parse_args()
+def main():
+    parser = argparse.ArgumentParser(description="Searches and highlights search terms in the input.")
+    parser.add_argument("searchterms", nargs='+', help="Search terms")
+    parser.add_argument("-i", "--ignore-case", action="store_true", help="Ignore case distinctions")
+    parser.add_argument("-k", "--display-all", action="store_true", help="Display all lines, only highlight")
+    args = parser.parse_args()
 
-colors = [
-    ('green','04;01;32'),
-    ('yellow','04;01;33'),
-    ('red','04;01;31'),
-    ('blue','04;01;34'),
-    ('purple','0;04;35'),
-    ('magenta','04;01;35'),
-    ('cyan','04;01;36'),
-    ('brown','0;04;33'),
+    colors = [
+        ('green', '04;01;32'),
+        ('yellow', '04;01;33'),
+        ('red', '04;01;31'),
+        ('blue', '04;01;34'),
+        ('purple', '0;04;35'),
+        ('magenta', '04;01;35'),
+        ('cyan', '04;01;36'),
+        ('brown', '0;04;33'),
     ]
 
-if len(args) == 0:
-    parser.print_help()
-    sys.exit()
+    if not args.searchterms:
+        parser.print_help()
+        sys.exit()
 
-op = sys.stdin.read()
-if not options.display_all:
-    if options.ignore_case:
-  
-        if sys.version_info > (3, ):
-            p = Popen(["egrep", "|".join(args), "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy(),encoding="utf-8")
-        else:
-            p = Popen(["egrep", "|".join(args), "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy())
+    # Reads from standard input
+    op = sys.stdin.read()
 
-    else:
-        
-        if sys.version_info > (3, ):
-            p = Popen(["egrep", "|".join(args), "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy(),encoding="utf-8")
-        else:
-            p = Popen(["egrep", "|".join(args), "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=os.environ.copy())
+    # Filters the input if -k is not set
+    if not args.display_all:
+        pattern = "|".join(args.searchterms)
+        egrep_cmd = ["egrep", "--color=always"]
+        if args.ignore_case:
+            egrep_cmd.append("-i")
+        egrep_cmd.append(pattern)
 
-    op = p.communicate(input=op)[0]
+        p = Popen(egrep_cmd, stdin=PIPE, stdout=PIPE, stderr=STDOUT, env=os.environ.copy(), universal_newlines=True)
+        op, _ = p.communicate(input=op)
 
-for i,srch in enumerate(args):
-    color = colors[i%len(colors)][1]
-    env=os.environ.copy()
-    env['GREP_COLORS'] = "mt="+color
+    # Highlights the search terms
+    for i, srch in enumerate(args.searchterms):
+        color = colors[i % len(colors)][1]
+        env = os.environ.copy()
+        env['GREP_COLORS'] = "mt=" + color
 
-    if options.ignore_case:
+        egrep_cmd = ["egrep", "--color=always"]
+        if args.ignore_case:
+            egrep_cmd.append("-i")
+        egrep_cmd.append(srch + "|")
 
-        if sys.version_info > (3, ):
-            p = Popen(["egrep", srch+"|", "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env,encoding="utf-8")
-        else:
-            p = Popen(["egrep", srch+"|", "--color=always", "-i"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
+        p = Popen(egrep_cmd, stdin=PIPE, stdout=PIPE, stderr=STDOUT, env=env, universal_newlines=True)
+        op, _ = p.communicate(input=op)
 
-    else:
-        
-        if sys.version_info > (3, ):
-            p = Popen(["egrep", srch+"|", "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env,encoding="utf-8")
-        else:
-            p = Popen(["egrep", srch+"|", "--color=always"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, env=env)
+    print(op, end='')
 
-    op = p.communicate(input=op)[0]
-
-print(op)
+if __name__ == "__main__":
+    main()
