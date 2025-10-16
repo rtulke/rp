@@ -419,7 +419,4 @@ Contributions welcome! Please ensure:
 - All features have examples
 - Error handling is robust
 - Performance is tested
-
-## License
-
-MIT License - See LICENSE file
+- One single file ;)
