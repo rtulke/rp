@@ -24,7 +24,7 @@ I always had problems with filtering out large continuous text, i.e. text that y
 * Python 3.6
 * egrep or grep, grep should be GNU Version 3.x
 
-## Installation Linux
+## Installation Linux, macOS
 
 ```bash
 # clone repository
@@ -37,8 +37,6 @@ chmod +x /usr/local/bin/rp
 # or optinal use symlink insted of copy to /usr/local/bin
 # ln -s $(pwd)/rp.py /usr/local/bin
 ```
-
-## Installation MacOS
 
 Mac OS X uses BSD grep or egrep, which are not 100% compatible with Linux grep/egrep. Most functions should work. If you encounter any problems, please create an issue.
 
