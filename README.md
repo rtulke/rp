@@ -423,22 +423,3 @@ Contributions welcome! Please ensure:
 ## License
 
 MIT License - See LICENSE file
-
-## Changelog
-
-### v5.0 (2025)
-- Statistics mode with per-pattern counts
-- Pattern file support
-- Improved error handling
-- Single-pass optimization
-- Better unicode handling
-- Broken pipe handling
-
-### v4.0
-- Context lines support
-- File and recursive operations
-- Multiple output modes
-- Binary file detection
-
-### v3.0
-- Initial multi-pattern grep-based implementation
