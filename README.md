@@ -40,7 +40,7 @@ chmod +x /usr/local/bin/rp
 
 ## Installation MacOS
 
-Mac OS X uses the BSD grep or egrep which is not 100% compatible with Linux grep/egrep. 
+Mac OS X uses BSD grep or egrep, which are not 100% compatible with Linux grep/egrep. Most functions should work. If you encounter any problems, please create an issue.
 
 ## Quick Start
 
