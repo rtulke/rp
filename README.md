@@ -309,8 +309,8 @@ CRITICAL
 **Benchmarks** (1M lines, 4 patterns):
 ```
 grep (4 calls): ~3.5s
-rp v3:         ~4.2s (grep-based, multiple passes)
-rp v5:         ~1.8s (Python, single pass)
+rp v3:          ~4.2s (grep-based, multiple passes)
+rp v5:          ~1.8s (Python, single pass)
 ```
 
 ## Comparison with grep
