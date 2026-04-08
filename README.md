@@ -28,7 +28,20 @@ rp (red pencil) is a command-line tool for searching and highlighting text with 
 
 ## Installation
 
-### Linux, macOS
+### macOS (Homebrew)
+
+```bash
+brew tap rtulke/rp
+brew install rp
+```
+
+Upgrade:
+
+```bash
+brew update && brew upgrade rp
+```
+
+### Linux, macOS (manual)
 
 ```bash
 git clone https://github.com/rtulke/rp.git
