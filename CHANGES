@@ -1,0 +1,52 @@
+# Changelog
+
+
+## v5.1 (2026-04-08) Robert Tulke, rt@debian.sh
+
+- Fix args.files always being empty due to two nargs='*' positionals;
+  split patterns and files with trailing-path heuristic instead
+- Fix PermissionError as dead code (subclass of OSError, wrong order)
+- Fix -f/--file overwriting previous value; use action='append' now
+- Fix --count + --stats inconsistency between stdin and file mode
+- Add warning when -C is used together with -A or -B
+- Eliminate triple regex scan per line; single find_all_matches call,
+  apply_colors result cached for both stats and output
+- apply_colors: O(n*m) string concatenation replaced with list + join
+- ContextBuffer: replace unbounded printed_lines set with last_printed int
+- Statistics.display: O(n^2) list.index in loop replaced with enumerate
+- Strip \r\n instead of \n only to handle CRLF files correctly
+- -e/--regexp: explicit pattern flag; all positionals become files
+- -l/-L: --files-with-matches / --files-without-match
+- -m/--max-count: stop after N matches per file
+- -q/--quiet: suppress output, exit code only
+- -H/--with-filename: per-line filename prefix (replaces section headers)
+- --no-filename: suppress filename prefix
+- -Z/--null: null-separated filename output for xargs -0
+- -V/--version: print version and exit
+- --color=always|never|auto with NO_COLOR env var support
+- --include/--exclude: glob filters for recursive search
+- --line-buffered: line-buffered stdout for tail -f pipelines
+- --stats output moved to stderr to not pollute stdout pipelines
+- Context groups separated by -- lines between non-adjacent blocks
+- Remove redundant import os in BrokenPipeError handler
+- Remove unused line_num variable in load_patterns_from_file
+- extract_only_matches: add overlap deduplication matching apply_colors
+- Add VERSION = '5.1' constant
+- Rewrite README with all current flags and no emoji
+
+## v5.0 (2025) Robert Tulke, rt@debian.sh
+- Statistics mode with per-pattern counts
+- Pattern file support
+- Improved error handling
+- Single-pass optimization
+- Better unicode handling
+- Broken pipe handling
+
+## v4.0 Robert Tulke, rt@debian.sh
+- Context lines support
+- File and recursive operations
+- Multiple output modes
+- Binary file detection
+
+## v3.0 Robert Tulke, rt@debian.sh
+- Initial multi-pattern grep-based implementation
