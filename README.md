@@ -1,123 +1,200 @@
 rp
 ==
 
-rp - red pencil is a simple multicolor command-line tool to highlight the filtered output text with multi-pattern highlighting, regex support, and advanced statistics. Each search pattern gets its own color, making it easy to visually distinguish multiple patterns in log files and text output.
-
-I always had problems with filtering out large continuous text, i.e. text that you want to filter out of log files with cat or something similar. So I needed a tool that makes it easy to see what I'm actually looking for.
+rp (red pencil) is a command-line tool for searching and highlighting text with multi-pattern support, regex, and match statistics. Each search pattern gets its own color, making it easy to visually distinguish multiple patterns at once in log files, source code, and any text output.
 
 ![Example](/images/rpen1.png)
 
 
 ## Features
 
-- **Multi-color highlighting** - Each pattern gets a unique color
-- **Full regex support** - Use powerful regular expressions
-- **Statistics mode** - Get detailed match counts per pattern
-- **File and directory support** - Search single files or recursively
-- **Context lines** - Show lines before/after matches (like `grep -A/-B/-C`)
-- **Multiple output modes** - Count, only-matching, invert, and more
-- **Performance optimized** - Single-pass processing
-- **Robust** - Handles binary files, unicode, broken pipes
+- Multi-color highlighting with up to 8 distinct colors per pattern
+- Full regular expression support
+- Single-pass processing for efficient multi-pattern search
+- Statistics mode with per-pattern match counts
+- Context lines before and after matches, with group separators
+- Recursive directory search with glob-based file filtering
+- Multiple output modes: count, only-matching, invert, files-with-matches
+- Filename prefix control and null-separated output for scripting
+- Color auto-detection based on TTY, with NO_COLOR environment variable support
+- Handles binary files, Unicode, and broken pipes robustly
+
 
 ## Requirements
 
-* Python 3.6
-* egrep or grep, grep should be GNU Version 3.x
+- Python 3.6 or later
+- No external dependencies
 
-## Installation Linux, macOS
+
+## Installation
+
+### Linux, macOS
 
 ```bash
-# clone repository
 git clone https://github.com/rtulke/rp.git
 
-# for system wide installation
+# System-wide installation
 cp rp/rp.py /usr/local/bin/rp
 chmod +x /usr/local/bin/rp
 
-# or optinal use symlink insted of copy to /usr/local/bin
-# ln -s $(pwd)/rp.py /usr/local/bin
+# Or use a symlink
+ln -s $(pwd)/rp/rp.py /usr/local/bin/rp
 ```
 
-Mac OS X uses BSD grep or egrep, which are not 100% compatible with Linux grep/egrep. Most functions should work. If you encounter any problems, please create an issue.
 
 ## Quick Start
 
 ```bash
-# Basic usage with stdin
+# Highlight patterns in stdin
 cat error.log | rp ERROR WARN INFO
 
-# Search in files
+# Search in a file
 rp "exception" application.log
 
-# Multiple patterns with colors
+# Multiple patterns in a file
 rp "error|ERROR" "warn|WARN" "info|INFO" system.log
 
-# Recursive directory search
-rp -r -i "todo|fixme|hack" ~/projects/
+# Recursive search in a directory
+rp -r -i "todo|fixme" ~/projects/
 
 # With line numbers and context
 rp -n -C 3 "CRITICAL" system.log
 ```
 
+
 ## Usage
 
 ```
-rp [OPTIONS] PATTERN [PATTERN...] [FILE...]
+rp [OPTIONS] PATTERN [PATTERN ...] [FILE ...]
+rp [OPTIONS] -e PATTERN [-e PATTERN ...] [FILE ...]
 ```
 
-### Basic Options
+Patterns are regular expressions. Files and directories are specified after patterns. When no file arguments are given, rp reads from standard input.
+
+Pattern and file arguments are split automatically: trailing arguments that exist on the filesystem are treated as files; the rest are patterns. Use `-e` to specify patterns explicitly when a pattern string might look like a file path.
+
+
+## Options
+
+### Pattern Specification
 
 | Option | Description |
 |--------|-------------|
-| `-i, --ignore-case` | Ignore case distinctions in patterns |
-| `-k, --display-all` | Display all lines, only highlight matches |
-| `-v, --invert-match` | Select non-matching lines |
-| `-w, --word-regexp` | Match only whole words |
+| `-e PATTERN`, `--regexp PATTERN` | Explicit search pattern. Can be repeated. When `-e` is used, all positional arguments are treated as files. |
+| `-f FILE`, `--file FILE` | Read patterns from FILE, one per line. Can be repeated to load from multiple files. |
+
+### Match Behavior
+
+| Option | Description |
+|--------|-------------|
+| `-i`, `--ignore-case` | Ignore case when matching patterns |
+| `-v`, `--invert-match` | Print lines that do not match any pattern |
+| `-w`, `--word-regexp` | Match only complete words (wraps patterns in `\b` boundaries) |
+| `-k`, `--display-all` | Display all lines; only highlight matches instead of filtering |
 
 ### Output Control
 
 | Option | Description |
 |--------|-------------|
-| `-n, --line-number` | Print line numbers with output |
-| `-c, --count` | Print only count of matching lines |
-| `-o, --only-matching` | Print only matched parts of lines |
-| `--stats` | Display detailed statistics about matches |
+| `-n`, `--line-number` | Print line numbers before each output line |
+| `-c`, `--count` | Print only the count of matching lines per file |
+| `-o`, `--only-matching` | Print only the matched portion of each line |
+| `-H`, `--with-filename` | Always print the filename prefix before each output line |
+| `--no-filename` | Never print filename prefix, even when searching multiple files |
+| `-Z`, `--null` | Separate filenames with a null byte instead of newline (for `-l`/`-L`; for use with `xargs -0`) |
+| `-q`, `--quiet` | Suppress all output; exit 0 if any match is found, 1 otherwise |
+| `-m NUM`, `--max-count NUM` | Stop after NUM matches per file. 0 means unlimited (default). |
+| `--stats` | Print match statistics after output. Written to stderr. |
+| `--color WHEN` | Control color output: `always`, `never`, or `auto` (default). Auto enables color only when stdout is a terminal and the `NO_COLOR` environment variable is not set. |
 
-### Context Control
-
-| Option | Description |
-|--------|-------------|
-| `-A NUM, --after-context NUM` | Print NUM lines after match |
-| `-B NUM, --before-context NUM` | Print NUM lines before match |
-| `-C NUM, --context NUM` | Print NUM lines before and after match |
-
-### File Handling
+### Context
 
 | Option | Description |
 |--------|-------------|
-| `-r, --recursive` | Search directories recursively |
-| `-I, --no-binary` | Skip binary files automatically |
-| `-f FILE, --file FILE` | Read patterns from FILE (one per line) |
+| `-A NUM`, `--after-context NUM` | Print NUM lines after each match |
+| `-B NUM`, `--before-context NUM` | Print NUM lines before each match |
+| `-C NUM`, `--context NUM` | Print NUM lines before and after each match. Overrides `-A` and `-B`. |
+
+Non-adjacent context groups are separated by `--` lines, matching the behavior of grep.
+
+### File Selection
+
+| Option | Description |
+|--------|-------------|
+| `-l`, `--files-with-matches` | Print only the names of files that contain at least one match |
+| `-L`, `--files-without-match` | Print only the names of files that contain no matches |
+| `-r`, `--recursive` | Search all files under each directory recursively. Hidden files and directories (names starting with `.`) are skipped. |
+| `-I`, `--no-binary` | Skip binary files automatically |
+| `--include GLOB` | Search only files whose names match GLOB. Can be repeated. Only applies during recursive search. Example: `--include="*.log"` |
+| `--exclude GLOB` | Skip files whose names match GLOB. Can be repeated. Only applies during recursive search. |
+
+### Miscellaneous
+
+| Option | Description |
+|--------|-------------|
+| `--line-buffered` | Force line-buffered output. Useful when piping from `tail -f` or other streaming sources. |
+| `-V`, `--version` | Print version and exit |
+
 
 ## Examples
 
-### Basic Searching
+### Basic Search
 
 ```bash
-# Single pattern
+# Single pattern from stdin
 cat app.log | rp "ERROR"
 
 # Multiple patterns with different colors
 cat app.log | rp "ERROR" "WARN" "INFO"
 
-# Case-insensitive search
+# Case-insensitive
 cat app.log | rp -i "error" "warning"
 
-# Show all lines, only highlight
+# Show all lines, only highlight matches (no filtering)
 cat config.txt | rp -k "TODO" "FIXME"
 ```
 
-### Regex Patterns
+### Explicit Pattern Specification with -e
+
+Use `-e` when a pattern might look like a filename, or when combining with multiple file arguments:
+
+```bash
+# Pattern that looks like a filename
+rp -e "app.log" application.log
+
+# Multiple explicit patterns
+rp -e "ERROR" -e "WARN" app.log system.log
+
+# Mix -e with -f
+rp -e "CRITICAL" -f base-patterns.txt application.log
+```
+
+### Searching Files and Directories
+
+```bash
+# Single file
+rp "pattern" file.log
+
+# Multiple files
+rp "error" app.log system.log access.log
+
+# Recursive directory search
+rp -r "TODO" ~/projects/
+
+# Recursive, case-insensitive
+rp -r -i "fixme" /var/log/
+
+# Only .log files during recursion
+rp -r --include="*.log" "ERROR" /var/log/
+
+# Exclude compiled files during recursion
+rp -r --exclude="*.pyc" --exclude="*.pyo" "pattern" src/
+
+# Skip binary files
+rp -r -I "search term" /usr/share/
+```
+
+### Regular Expressions
 
 ```bash
 # IP addresses
@@ -129,27 +206,11 @@ cat dump.txt | rp "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
 # Timestamps
 cat system.log | rp "\d{4}-\d{2}-\d{2}" "\d{2}:\d{2}:\d{2}"
 
-# Multiple error types
+# Multiple error variants
 cat error.log | rp "err(or)?" "warn(ing)?" "exception"
-```
 
-### File Operations
-
-```bash
-# Single file
-rp "pattern" file.log
-
-# Multiple files
-rp "error" *.log
-
-# Recursive directory search
-rp -r "TODO" ~/projects/
-
-# Recursive with case-insensitive
-rp -r -i "fixme" /var/log/
-
-# Skip binary files
-rp -r -I "search term" /usr/share/
+# Whole words only
+rp -w "test" file.txt
 ```
 
 ### Context Lines
@@ -171,20 +232,57 @@ rp -n -C 2 "error" application.log
 ### Output Modes
 
 ```bash
-# Count matches only
+# Count matches per file
 rp -c "error" *.log
 
-# Count per file
+# Count from multiple files
 rp -c "warning" file1.log file2.log file3.log
 
-# Show only matching parts
+# Only the matched text, not the whole line
 rp -o "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" access.log
 
-# Invert match (exclude lines)
+# Lines that do not match
 rp -v "DEBUG" application.log
 
-# Line numbers
+# With line numbers
 rp -n "error" app.log
+
+# Stop after 5 matches
+rp -m 5 "ERROR" large.log
+```
+
+### Filename Output
+
+```bash
+# List files containing matches
+rp -l "ERROR" *.log
+
+# List files with no matches
+rp -L "ERROR" *.log
+
+# Per-line filename prefix (grep style)
+rp -H "ERROR" app.log system.log
+
+# Filename prefix suppressed even for multiple files
+rp --no-filename "ERROR" app.log system.log
+
+# Null-separated filenames for xargs
+rp -rlZ "ERROR" /var/log/ | xargs -0 vim
+rp -rlZ "TODO" ~/projects/ | xargs -0 grep -l "FIXME"
+```
+
+### Quiet Mode for Shell Scripts
+
+```bash
+# Exit code only, no output
+if rp -q "ERROR" app.log; then
+    echo "Errors found"
+fi
+
+# Combined with recursive search
+if rp -rq "password" ~/projects/; then
+    echo "Potential credential leak found"
+fi
 ```
 
 ### Statistics Mode
@@ -193,9 +291,7 @@ rp -n "error" app.log
 # Basic statistics
 rp --stats "ERROR" "WARN" "INFO" application.log
 
-# Output:
-# [... colored matches ...]
-#
+# Output on stderr:
 # === Statistics ===
 # Total lines processed: 10000
 # Lines with matches: 847
@@ -209,164 +305,51 @@ rp --stats "ERROR" "WARN" "INFO" application.log
 # Statistics with count mode
 rp --stats -c "error|exception" *.log
 
-# Statistics without match output
-rp --stats -c "pattern" large.log
+# Statistics on a recursive search
+rp -r --include="*.log" --stats "ERROR" "WARN" /var/log/
 ```
 
 ### Pattern Files
 
-Create a pattern file (`patterns.txt`):
-
-```text
-# Security-related patterns
-authentication.*failed
-permission.*denied
-unauthorized.*access
-
-# Error patterns
-\b(error|exception|fatal)\b
-
-# Network patterns
-\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}
-```
-
-Use the pattern file:
-
 ```bash
-# From file only
+# Load patterns from a file
 rp -f patterns.txt access.log
 
-# Combine file and command-line patterns
+# Multiple pattern files combined
+rp -f security.txt -f network.txt system.log
+
+# Pattern file with additional command-line patterns
 rp -f patterns.txt "CRITICAL" system.log
 
-# With statistics
+# Pattern file with recursive search and statistics
 rp -f security-patterns.txt --stats -r /var/log/
-
-# Recursive with pattern file
-rp -f patterns.txt -r -I ~/logs/
 ```
 
-### Advanced Combinations
+### Real-time Log Monitoring
 
 ```bash
-# Full log analysis
-rp -f patterns.txt --stats -n -C 2 -i -r /var/log/
-
-# Security audit
-rp -f security-patterns.txt -r -I --stats /var/log/ 2>/dev/null
-
-# Development workflow
-rp -r -i "TODO|FIXME|HACK|XXX" --stats ~/project/src/
-
-# Monitor logs in real-time
+# Monitor a log file in real-time
 tail -f app.log | rp "ERROR" "EXCEPTION" "CRITICAL"
 
-# Find specific issues with context
-rp -n -C 5 "OutOfMemory|StackOverflow" *.log
+# With line-buffered output to ensure no delay
+tail -f app.log | rp --line-buffered "ERROR" "WARN"
 ```
 
-## Pattern File Format
+### Color Control
 
-Pattern files support:
-- One pattern per line
-- Comments starting with `#`
-- Empty lines (ignored)
-- Full regex syntax
-
-Example (`patterns.txt`):
-```text
-# HTTP status codes
-\b[45]\d{2}\b
-
-# Common log levels
-ERROR
-WARNING
-CRITICAL
-
-# IP addresses
-\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b
-```
-
-## Exit Codes
-
-| Code | Meaning |
-|------|---------|
-| 0 | Matches found |
-| 1 | No matches found |
-| 2 | Error occurred |
-| 130 | Interrupted (Ctrl+C) |
-| 141 | Broken pipe |
-
-## Performance
-
-**Optimizations:**
-- Single-pass processing (no repeated pipe overhead like v3)
-- Pre-compiled regex patterns
-- Efficient context buffer with deque
-- Lazy file iteration
-- Binary file detection (first 8KB)
-
-**Benchmarks** (1M lines, 4 patterns):
-```
-grep (4 calls): ~3.5s
-rp v3:          ~4.2s (grep-based, multiple passes)
-rp v5:          ~1.8s (Python, single pass)
-```
-
-## Comparison with grep
-
-| Feature | grep | rp |
-|---------|------|-----|
-| Multi-color highlighting | ❌ | ✅ |
-| Regex support | ✅ | ✅ |
-| Context lines | ✅ | ✅ |
-| Statistics | ❌ | ✅ |
-| Pattern files | ✅ | ✅ |
-| Performance | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| Single pattern | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| Multiple patterns | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
-
-## Use Cases
-
-### Security Analysis
 ```bash
-rp -f security-patterns.txt --stats -r /var/log/
+# Force color even when piping (e.g. into less -R)
+rp --color=always "ERROR" app.log | less -R
+
+# No color output
+rp --color=never "ERROR" app.log > report.txt
+
+# Disable color via environment variable
+NO_COLOR=1 rp "ERROR" app.log
 ```
 
-### Development
-```bash
-rp -r "TODO|FIXME|HACK" --stats src/
-```
+### Combining Tools
 
-### Log Monitoring
-```bash
-tail -f app.log | rp "ERROR" "WARN" "EXCEPTION"
-```
-
-### Incident Response
-```bash
-rp -n -C 5 "OutOfMemory|Segfault|Panic" *.log
-```
-
-### Code Review
-```bash
-rp -r -i "password|secret|key|token" --stats .
-```
-
-## Tips & Tricks
-
-### Color Output in Less
-```bash
-rp "pattern" file.log | less -R
-```
-
-### Save Colored Output
-```bash
-rp "pattern" file.log > output.txt  # No colors
-script -c 'rp "pattern" file.log' output.txt  # With colors
-```
-
-### Combine with Other Tools
 ```bash
 # With find
 find . -name "*.log" -exec rp "ERROR" {} +
@@ -376,45 +359,75 @@ cat file-list.txt | xargs rp "pattern"
 
 # With awk
 cat data.txt | awk '{print $3}' | rp "pattern"
+
+# Full log analysis
+rp -r --include="*.log" -f patterns.txt --stats -n -C 2 -i /var/log/
+
+# Find files with errors and open them
+rp -rlZ "Exception" src/ | xargs -0 vim
+
+# Security audit
+rp -r -I --stats -f security-patterns.txt /var/log/ 2>/dev/null
+
+# Find potential credential leaks in source
+rp -r -i "password|secret|api_key|token" --stats src/
 ```
 
-### Word Boundaries
+
+## Pattern File Format
+
+Pattern files contain one regular expression per line. Empty lines and lines starting with `#` are ignored.
+
+```text
+# HTTP error status codes
+\b[45]\d{2}\b
+
+# Common log levels
+ERROR
+WARNING
+CRITICAL
+
+# IP addresses
+\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b
+
+# Authentication failures
+authentication.*failed
+permission.*denied
+```
+
+Usage:
+
 ```bash
-# Match "test" but not "testing"
-rp -w "test" file.txt
-
-# Multiple whole words
-rp -w "error" "warning" "info" log.txt
+rp -f patterns.txt access.log
 ```
 
-## Troubleshooting
 
-### Binary File Warnings
-```bash
-# Skip binary files automatically
-rp -I "pattern" /path/
+## Exit Codes
 
-# Or redirect stderr
-rp "pattern" /path/ 2>/dev/null
+| Code | Meaning |
+|------|---------|
+| 0 | At least one match was found |
+| 1 | No matches found |
+| 2 | Error occurred (invalid pattern, file not found, etc.) |
+| 130 | Interrupted by Ctrl+C |
+| 141 | Broken pipe |
+
+
+## Performance
+
+rp processes each file in a single pass. All patterns are pre-compiled before scanning begins. For multi-pattern searches this avoids the overhead of running multiple grep invocations.
+
+Benchmarks (1 million lines, 4 patterns):
+
+```
+grep (4 separate calls): approx. 3.5s
+rp v3 (grep-based, multiple passes): approx. 4.2s
+rp v5 (Python, single pass): approx. 1.8s
 ```
 
-### Performance Issues
-```bash
-# Use simpler patterns when possible
-rp "ERROR" instead of "E[RR]*O[RR]*"
+For single-pattern searches without colorization, grep remains faster due to native C implementation and SIMD optimizations. rp's advantage is multi-pattern search, color output, and statistics in one pass.
 
-# Limit recursion depth (use find)
-find /path -maxdepth 2 -name "*.log" -exec rp "pattern" {} +
-```
-
-### Unicode Issues
-Unicode is handled with `errors='replace'` - invalid sequences are replaced with �
 
 ## Contributing
 
-Contributions welcome! Please ensure:
-- Code follows PEP 8
-- All features have examples
-- Error handling is robust
-- Performance is tested
-- One single file ;)
+Contributions are welcome. Please keep the tool as a single file and ensure any changes are tested against the documented examples. Code should follow PEP 8 style.
